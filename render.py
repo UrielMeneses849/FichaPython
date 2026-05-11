@@ -1,10 +1,12 @@
 import asyncio
+import os
+import sys
+
+from pathlib import Path
 from playwright.async_api import async_playwright
 from jinja2 import Environment, FileSystemLoader
-from pathlib import Path
+
 from parser import obtener_obra
-import sys
-import os
 
 # =========================
 # PLAYWRIGHT PATH
@@ -12,12 +14,22 @@ import os
 
 def get_playwright_path():
 
+    # =========================
+    # EXE (PYINSTALLER)
+    # =========================
+
     if getattr(sys, 'frozen', False):
 
         base_path = sys._MEIPASS
-        return os.path.join(base_path, "ms-playwright")
 
-    return None
+    else:
+
+        base_path = os.getcwd()
+
+    return os.path.join(
+        base_path,
+        "ms-playwright"
+    )
 
 # =========================
 # HELPERS
@@ -150,6 +162,13 @@ async def generar_pdf(clave):
     }
 
     # =========================
+    # CREAR FOLDERS
+    # =========================
+
+    Path("output/html").mkdir(parents=True, exist_ok=True)
+    Path("output/pdf").mkdir(parents=True, exist_ok=True)
+
+    # =========================
     # JINJA
     # =========================
 
@@ -177,15 +196,12 @@ async def generar_pdf(clave):
 
     pdf_path = f"output/pdf/ficha_{clave}.pdf"
 
+    os.environ["PLAYWRIGHT_BROWSERS_PATH"] = get_playwright_path()
+
     async with async_playwright() as p:
 
-        playwright_path = get_playwright_path()
-
         browser = await p.chromium.launch(
-            headless=True,
-            env={
-                "PLAYWRIGHT_BROWSERS_PATH": playwright_path
-            } if playwright_path else None
+            headless=True
         )
 
         page = await browser.new_page()
