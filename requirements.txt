@@ -1,3 +1,5 @@
 playwright
 jinja2
 lxml
+requests
+PyPDF2

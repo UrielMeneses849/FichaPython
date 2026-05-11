@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+
+# PyCharm
+.idea/
+
+# macOS
+.DS_Store
+
+# Output
+output/
+
+# Build
+build/
+dist/
+*.spec
