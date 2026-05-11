@@ -3,6 +3,21 @@ from playwright.async_api import async_playwright
 from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
 from parser import obtener_obra
+import sys
+import os
+
+# =========================
+# PLAYWRIGHT PATH
+# =========================
+
+def get_playwright_path():
+
+    if getattr(sys, 'frozen', False):
+
+        base_path = sys._MEIPASS
+        return os.path.join(base_path, "ms-playwright")
+
+    return None
 
 # =========================
 # HELPERS
@@ -164,7 +179,14 @@ async def generar_pdf(clave):
 
     async with async_playwright() as p:
 
-        browser = await p.chromium.launch()
+        playwright_path = get_playwright_path()
+
+        browser = await p.chromium.launch(
+            headless=True,
+            env={
+                "PLAYWRIGHT_BROWSERS_PATH": playwright_path
+            } if playwright_path else None
+        )
 
         page = await browser.new_page()
 

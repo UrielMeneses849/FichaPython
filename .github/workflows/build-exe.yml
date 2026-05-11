@@ -56,12 +56,13 @@ jobs:
 
       - name: Build EXE
         shell: cmd
-        run: >
-          pyinstaller --onefile
-          --name ficha-renderer
-          --add-data "template.html;."
-          --add-data "style.css;."
-          --add-data "assets;assets"
+        run: |
+          pyinstaller --onefile ^
+          --name ficha-renderer ^
+          --add-data "template.html;." ^
+          --add-data "style.css;." ^
+          --add-data "assets;assets" ^
+          --add-data "%USERPROFILE%\AppData\Local\ms-playwright;ms-playwright" ^
           app.py
 
       # =========================
