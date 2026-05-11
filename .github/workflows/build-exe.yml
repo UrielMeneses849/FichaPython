@@ -55,18 +55,13 @@ jobs:
       # =========================
 
       - name: Build EXE
-        run: |
-      
-          pyinstaller --onefile `
-      
-          --name ficha-renderer `
-      
-          --add-data "template.html;." `
-      
-          --add-data "style.css;." `
-      
-          --add-data "assets;assets" `
-      
+        shell: cmd
+        run: >
+          pyinstaller --onefile
+          --name ficha-renderer
+          --add-data "template.html;."
+          --add-data "style.css;."
+          --add-data "assets;assets"
           app.py
 
       # =========================
