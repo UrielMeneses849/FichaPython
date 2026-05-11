@@ -1,0 +1,18 @@
+body{
+    font-family: Arial;
+    padding:40px;
+}
+
+.ficha{
+    width:100%;
+}
+
+.logo{
+    width:180px;
+    margin-bottom:20px;
+}
+
+.row{
+    margin-bottom:12px;
+    font-size:18px;
+}
