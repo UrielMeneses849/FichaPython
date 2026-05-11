@@ -56,14 +56,18 @@ jobs:
 
       - name: Build EXE
         run: |
-
-          pyinstaller ^
-            --onefile ^
-            --name BIMSA_FichaTecnica ^
-            --add-data "template.html;." ^
-            --add-data "style.css;." ^
-            --add-data "assets;assets" ^
-            app.py
+      
+          pyinstaller --onefile `
+      
+          --name ficha-renderer `
+      
+          --add-data "template.html;." `
+      
+          --add-data "style.css;." `
+      
+          --add-data "assets;assets" `
+      
+          app.py
 
       # =========================
       # UPLOAD ARTIFACT
