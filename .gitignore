@@ -9,9 +9,15 @@ __pycache__/
 .DS_Store
 
 # Output
-output/
+*.pdf
+
+# Playwright local browsers
+ms-playwright/
 
 # Build
 build/
 dist/
 *.spec
+
+# ZIPs
+*.zip

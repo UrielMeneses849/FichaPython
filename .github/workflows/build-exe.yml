@@ -51,10 +51,10 @@ jobs:
           playwright install chromium
 
       # =========================
-      # BUILD EXE
+      # BUILD RENDERER EXE
       # =========================
 
-      - name: Build EXE
+      - name: Build Renderer EXE
         shell: cmd
         run: |
           pyinstaller --onefile ^
@@ -66,6 +66,17 @@ jobs:
           app.py
 
       # =========================
+      # BUILD PDF MERGER EXE
+      # =========================
+
+      - name: Build PDF Merger EXE
+        shell: cmd
+        run: |
+          pyinstaller --onefile ^
+          --name pdf-merger ^
+          pdf_merger.py
+
+      # =========================
       # UPLOAD ARTIFACT
       # =========================
 
@@ -73,4 +84,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: BIMSA_FichaTecnica_EXE
-          path: dist/ficha-renderer.exe
+          path: |
+            dist/ficha-renderer.exe
+            dist/pdf-merger.exe

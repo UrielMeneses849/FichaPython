@@ -193,7 +193,7 @@ h1,h2,h3,h4,h5{
 
 
 <img
-src="{{ logo_path }}"
+src="file:///Users/urielmeneses/Desktop/MicroservicioPython/assets/logo_bimsa.png"
 alt="Logo BIMSA"
 style="height:58px;object-fit:contain;display:block;margin:16px 0;"
 >
@@ -206,7 +206,7 @@ Ficha Técnica del Proyecto
 </h2>
 
 <div class="date">
-Fecha de publicación: {{ obra.proy_fechacierre }}
+Fecha de publicación: 2023-12-04
 </div>
 
 <div style="
@@ -217,11 +217,11 @@ align-items:center;
 ">
 
 <div class="badge-orange">
-{{ obra.proy_tipoproyectodescripcion }}
+Proyecto contratado
 </div>
 
 <div class="badge-gray">
-{{ obra.proy_clave }}
+OC310160
 </div>
 
 </div>
@@ -253,7 +253,7 @@ Información General
 </h3>
 
 <div class="orange-pill">
-Etapa: {{ obra.proy_etapa }}
+Etapa: INICIO
 </div>
 
 </div>
@@ -271,7 +271,7 @@ Nombre del proyecto:
 </div>
 
 <div class="info-value">
-{{ obra.proy_nombre }}
+EDIFICIO EN 14 NIVELES PARA 61 DEPARTAMENTOS DE SEMI-LUJO (ETAPA CIMENTACIÓN) (TORRE 1)  "OPEN SKIES"
 </div>
 
 </div>
@@ -291,7 +291,7 @@ align-items:stretch;
 Fecha Inicio Probable
 </div>
 <div class="info-value">
-{{ obra.proy_fecha_inicio }}
+2023-12-01
 </div>
 </div>
 
@@ -300,11 +300,9 @@ Fecha Inicio Probable
 Fecha Termino Probable
 </div>
 <div class="info-value">
-{% if obra.proy_fecha_fin and obra.proy_fecha_fin|trim != "" %}
-    {{ obra.proy_fecha_fin }}
-{% else %}
-    Desconocido
-{% endif %}
+
+    2024-03-09
+
 </div>
 </div>
 
@@ -325,7 +323,7 @@ white-space:nowrap;
 overflow:hidden;
 text-overflow:ellipsis;
 ">
-{{ obra.genero }}
+VIVIENDA
 </div>
 
 </div>
@@ -345,7 +343,7 @@ white-space:nowrap;
 overflow:hidden;
 text-overflow:ellipsis;
 ">
-{{ obra.subgenero }}
+LUJO
 </div>
 
 </div>
@@ -363,18 +361,18 @@ Ubicación del proyecto
 <div style="display:flex;gap:22px;font-size:14px;font-weight:300;color:#374151;">
 <div>
 <span style="font-weight:300;">Estado:</span>
-{{ obra.esta_descripcion }}
+COAHUILA
 </div>
 <div>
 <span style="font-weight:300;">Municipio:</span>
-{{ obra.muni_descripcion }}
+TORREON
 </div>
 </div>
 
 </div>
 
 <div class="info-value">
-{{ obra.proy_localizacion }}
+SAN IGNACIO DE LOYOLA # 325 (JUNTO AL SANATORIO ESPAÑOL), TORREÓN, COAHUILA
 </div>
 
 </div>
@@ -436,7 +434,7 @@ align-items:center;
 justify-content:flex-end;
 height:28px;
 ">
-MXN ${{ '{:,.0f}'.format(obra.proy_inversion|float) }}
+MXN $265,254,880
 </div>
 
 </div>
@@ -453,27 +451,25 @@ MXN ${{ '{:,.0f}'.format(obra.proy_inversion|float) }}
 <div class="info-value">
 Superficie construida:
 
-{% if obra.superficie|float == 0 %}
-    Desconocido
-{% else %}
-    {{ '{:,.0f}'.format(obra.superficie|float) }} m²
-{% endif %}
+
+    10,394 m²
+
 
 </div>
 
 <div class="info-value">
 Sector:
-{{ obra.sector }}
+PRIVADO
 </div>
 
 <div class="info-value">
 Tipo de obra:
-{{ obra.tipo_obra }}
+CONDOMINIOS DE LUJO
 </div>
 
 <div class="info-value">
 Tipo de desarrollo:
-{{ obra.desa_descripcion }}
+OBRA NUEVA
 </div>
 
 </div>
@@ -496,13 +492,13 @@ Tipo de desarrollo:
     Compañías
 </h3>
 
-{% set totalCias = obra.cias_normalizadas|length %}
 
-{% for cia in obra.cias_normalizadas %}
+
+
 
 <div style="
     padding:12px;
-    margin-bottom:{% if totalCias > 1 %}16px{% else %}0px{% endif %};
+    margin-bottom:16px;
 ">
 
 <!-- HEADER -->
@@ -531,7 +527,7 @@ Tipo de desarrollo:
             line-height:1.5;
             word-break:break-word;
         ">
-            {{ cia.nombre }}
+            AXIOMA PROYECTOS
         </div>
 
         <div style="
@@ -580,7 +576,7 @@ Tipo de desarrollo:
         </span>
 
         <span style="font-weight:300;font-size:14px; width: fit-content;">
-            {{ cia.rol }}
+            GERENCIA DE PROYECTO
         </span>
 
         <span style="font-weight:300;font-size:14px; width: fit-content;">
@@ -588,7 +584,7 @@ Tipo de desarrollo:
         </span>
 
         <span style="font-weight:300;font-size:14px; width: fit-content;">
-            {{ cia.direccion }}
+            RIO MISSOURI # 600 INT. 213-B
         </span>
 
         <span style="font-weight:300;font-size:14px; width: fit-content;">
@@ -596,32 +592,12 @@ Tipo de desarrollo:
         </span>
 
 <span style="font-weight:300;font-size:14px;">
-    {{ cia.telefono1 }}
+    8676 2525 
 </span>
 
-{% if cia.telefono2 and cia.telefono2|trim != "" %}
 
-<span style="font-weight:300;font-size:14px; width: fit-content;">
-    Teléfono 2
-</span>
 
-<span style="font-weight:300;font-size:14px;">
-    {{ cia.telefono2 }}
-</span>
 
-{% endif %}
-
-{% if cia.telefono3 and cia.telefono3|trim != "" %}
-
-<span style="font-weight:300;font-size:14px; width: fit-content;">
-    Teléfono 3
-</span>
-
-<span style="font-weight:300;font-size:14px;">
-    {{ cia.telefono3 }}
-</span>
-
-{% endif %}
 
     </div>
 
@@ -634,7 +610,7 @@ Tipo de desarrollo:
         align-items:start;
     ">
 
-        {% for contacto in cia.contactos %}
+        
 
         <div style="
             background:#F9FAFB;
@@ -651,26 +627,98 @@ Tipo de desarrollo:
                 font-weight:400;
                 font-size:14px;
             ">
-                {{ contacto.puesto }}
+                COORDINADOR DE PROYECTOS
             </div>
 
             <div style="
                 font-weight:300;
                 font-size:14px;
             ">
-                {{ contacto.nombre }}
+                SILVIA  LEAL
             </div>
 
             <div style="
                 color:#6B7280;
                 font-size:12px;
             ">
-                {{ contacto.email }}
+                sleal@axiomaproyectos.mx
             </div>
 
         </div>
 
-        {% endfor %}
+        
+
+        <div style="
+            background:#F9FAFB;
+            border-radius:12px;
+            padding:10px;
+            display:flex;
+            flex-direction:column;
+            gap:8px;
+            justify-content:center;
+            padding: 8px 16px;
+        ">
+
+            <div style="
+                font-weight:400;
+                font-size:14px;
+            ">
+                ENCARGADO DE PROYECTOS
+            </div>
+
+            <div style="
+                font-weight:300;
+                font-size:14px;
+            ">
+                ADOLFO  DIAZ HINOJOSA
+            </div>
+
+            <div style="
+                color:#6B7280;
+                font-size:12px;
+            ">
+                adiaz@axiomaproyectos.mx
+            </div>
+
+        </div>
+
+        
+
+        <div style="
+            background:#F9FAFB;
+            border-radius:12px;
+            padding:10px;
+            display:flex;
+            flex-direction:column;
+            gap:8px;
+            justify-content:center;
+            padding: 8px 16px;
+        ">
+
+            <div style="
+                font-weight:400;
+                font-size:14px;
+            ">
+                GERENTE DE COSTOS
+            </div>
+
+            <div style="
+                font-weight:300;
+                font-size:14px;
+            ">
+                SERGIO HERNANDEZ
+            </div>
+
+            <div style="
+                color:#6B7280;
+                font-size:12px;
+            ">
+                shernandez@axiomaproyectos.mx
+            </div>
+
+        </div>
+
+        
 
     </div>
 
@@ -678,7 +726,399 @@ Tipo de desarrollo:
 
 </div>
 
-{% endfor %}
+
+
+<div style="
+    padding:12px;
+    margin-bottom:16px;
+">
+
+<!-- HEADER -->
+
+<div style="
+    display:grid;
+    grid-template-columns:minmax(360px, 0.2fr) 2fr;
+    align-items:center;
+    margin-bottom:24px;
+    column-gap:34px;
+">
+
+    <!-- IZQUIERDA -->
+
+    <div style="
+        display:flex;
+        align-items:center;
+        gap:10px;
+    ">
+
+        <div style="
+            font-weight:300;
+            font-size:16px;
+            max-width:100%;
+            width:100%;
+            line-height:1.5;
+            word-break:break-word;
+        ">
+            CONSORCIO DE CIMENTACIONES Y CONSTRUCCIONES / AS CONSTRUCCIONES Y CIMENTACIONES / AS CIMENTACIONES
+        </div>
+
+        <div style="
+            flex:1;
+            min-width:30px;
+            height:1px;
+            background:#E5E7EB;
+            margin-top:4px;
+        "></div>
+
+    </div>
+
+    <!-- DERECHA -->
+
+    <div style="
+        font-size:13px;
+        color:#6B7280;
+        padding-left:4px;
+        font-weight:300;
+    ">
+        Contactos
+    </div>
+
+</div>
+
+<!-- CONTENIDO -->
+
+<div style="
+    display:grid;
+    grid-template-columns:minmax(350px, 0.8fr) 2.2fr;
+    gap:34px;
+    align-items:start;
+">
+
+    <!-- INFO -->
+
+    <div style="
+        display:grid;
+        grid-template-columns:80px 1fr;
+        gap:6px 10px;
+        font-size:13px;
+    ">
+
+        <span style="font-weight:300;font-size:14px; width: fit-content;">
+            Rol
+        </span>
+
+        <span style="font-weight:300;font-size:14px; width: fit-content;">
+            SUBCONTRATISTA DE CIMENTACION
+        </span>
+
+        <span style="font-weight:300;font-size:14px; width: fit-content;">
+            Dirección
+        </span>
+
+        <span style="font-weight:300;font-size:14px; width: fit-content;">
+            LA OPINION # 555
+        </span>
+
+        <span style="font-weight:300;font-size:14px; width: fit-content;">
+            Teléfono
+        </span>
+
+<span style="font-weight:300;font-size:14px;">
+    7189 393
+</span>
+
+
+
+
+
+    </div>
+
+    <!-- CONTACTOS -->
+
+    <div style="
+        display:grid;
+        grid-template-columns:repeat(2,minmax(200px,1fr));
+        gap:16px;
+        align-items:start;
+    ">
+
+        
+
+        <div style="
+            background:#F9FAFB;
+            border-radius:12px;
+            padding:10px;
+            display:flex;
+            flex-direction:column;
+            gap:8px;
+            justify-content:center;
+            padding: 8px 16px;
+        ">
+
+            <div style="
+                font-weight:400;
+                font-size:14px;
+            ">
+                ENCARGADO DE COSTOS
+            </div>
+
+            <div style="
+                font-weight:300;
+                font-size:14px;
+            ">
+                LUIS ALFREDO  GONZALEZ JAQUEZ
+            </div>
+
+            <div style="
+                color:#6B7280;
+                font-size:12px;
+            ">
+                cimenta.tecnico@gmail.com
+            </div>
+
+        </div>
+
+        
+
+        <div style="
+            background:#F9FAFB;
+            border-radius:12px;
+            padding:10px;
+            display:flex;
+            flex-direction:column;
+            gap:8px;
+            justify-content:center;
+            padding: 8px 16px;
+        ">
+
+            <div style="
+                font-weight:400;
+                font-size:14px;
+            ">
+                GERENTE DE PROYECTOS
+            </div>
+
+            <div style="
+                font-weight:300;
+                font-size:14px;
+            ">
+                JAVIER ELIZONDO
+            </div>
+
+            <div style="
+                color:#6B7280;
+                font-size:12px;
+            ">
+                cimenta.tecnico@gmail.com
+            </div>
+
+        </div>
+
+        
+
+    </div>
+
+</div>
+
+</div>
+
+
+
+<div style="
+    padding:12px;
+    margin-bottom:16px;
+">
+
+<!-- HEADER -->
+
+<div style="
+    display:grid;
+    grid-template-columns:minmax(360px, 0.2fr) 2fr;
+    align-items:center;
+    margin-bottom:24px;
+    column-gap:34px;
+">
+
+    <!-- IZQUIERDA -->
+
+    <div style="
+        display:flex;
+        align-items:center;
+        gap:10px;
+    ">
+
+        <div style="
+            font-weight:300;
+            font-size:16px;
+            max-width:100%;
+            width:100%;
+            line-height:1.5;
+            word-break:break-word;
+        ">
+            GRUPO CRECENTO
+        </div>
+
+        <div style="
+            flex:1;
+            min-width:30px;
+            height:1px;
+            background:#E5E7EB;
+            margin-top:4px;
+        "></div>
+
+    </div>
+
+    <!-- DERECHA -->
+
+    <div style="
+        font-size:13px;
+        color:#6B7280;
+        padding-left:4px;
+        font-weight:300;
+    ">
+        Contactos
+    </div>
+
+</div>
+
+<!-- CONTENIDO -->
+
+<div style="
+    display:grid;
+    grid-template-columns:minmax(350px, 0.8fr) 2.2fr;
+    gap:34px;
+    align-items:start;
+">
+
+    <!-- INFO -->
+
+    <div style="
+        display:grid;
+        grid-template-columns:80px 1fr;
+        gap:6px 10px;
+        font-size:13px;
+    ">
+
+        <span style="font-weight:300;font-size:14px; width: fit-content;">
+            Rol
+        </span>
+
+        <span style="font-weight:300;font-size:14px; width: fit-content;">
+            DESARROLLADOR
+        </span>
+
+        <span style="font-weight:300;font-size:14px; width: fit-content;">
+            Dirección
+        </span>
+
+        <span style="font-weight:300;font-size:14px; width: fit-content;">
+            C. PEZ GALLO #224
+        </span>
+
+        <span style="font-weight:300;font-size:14px; width: fit-content;">
+            Teléfono
+        </span>
+
+<span style="font-weight:300;font-size:14px;">
+    3080 042 
+</span>
+
+
+
+
+
+    </div>
+
+    <!-- CONTACTOS -->
+
+    <div style="
+        display:grid;
+        grid-template-columns:repeat(2,minmax(200px,1fr));
+        gap:16px;
+        align-items:start;
+    ">
+
+        
+
+        <div style="
+            background:#F9FAFB;
+            border-radius:12px;
+            padding:10px;
+            display:flex;
+            flex-direction:column;
+            gap:8px;
+            justify-content:center;
+            padding: 8px 16px;
+        ">
+
+            <div style="
+                font-weight:400;
+                font-size:14px;
+            ">
+                ENCARGADO DE COSTOS
+            </div>
+
+            <div style="
+                font-weight:300;
+                font-size:14px;
+            ">
+                BRENDA PONCE
+            </div>
+
+            <div style="
+                color:#6B7280;
+                font-size:12px;
+            ">
+                brenda.ponce@crecento.com
+            </div>
+
+        </div>
+
+        
+
+        <div style="
+            background:#F9FAFB;
+            border-radius:12px;
+            padding:10px;
+            display:flex;
+            flex-direction:column;
+            gap:8px;
+            justify-content:center;
+            padding: 8px 16px;
+        ">
+
+            <div style="
+                font-weight:400;
+                font-size:14px;
+            ">
+                ENCARGADO DE PROYECTOS
+            </div>
+
+            <div style="
+                font-weight:300;
+                font-size:14px;
+            ">
+                NATALI GOMEZ
+            </div>
+
+            <div style="
+                color:#6B7280;
+                font-size:12px;
+            ">
+                natali.gomez@crecento.com
+            </div>
+
+        </div>
+
+        
+
+    </div>
+
+</div>
+
+</div>
+
+
 
 </div>
 <!-- INFORMACION ADICIONAL -->
@@ -727,7 +1167,7 @@ Tipo de desarrollo:
         line-height:1.7;
     ">
 
-        {% if obra.descripcion %}
+        
 
         <div>
 
@@ -746,40 +1186,16 @@ Tipo de desarrollo:
                 margin:0;
                 color:#4B5563;
             ">
-                {{ obra.descripcion }}
+                ETAPA: INICIO, TIPO DE TRABAJO: OBRA NUEVA, NO.DE EDIFICIOS: 1, NO.DE NIVELES: 14, TAMAÑO: SUPERFICIE CUBIERTA CONSTRUIDA: 10394 M², Categoria: LUJO, Superficie Promedio: 142 M², Superficie Minima: 70 M², Superficie Maxima: 215 M², No de recamaras: 2, No de baños completos: 2, No de Estacionamientos por vivienda: 1, No de Estacionamientos en Total: 61, COCINA, COMEDOR, SALA.
             </p>
 
         </div>
 
-        {% endif %}
+        
 
-        {% if obra.acabados %}
+        
 
-        <div>
-
-            <p style="
-                font-weight:300;
-                font-size:16px;
-                margin:0 0 8px 0;
-                color:#374151;
-            ">
-                Acabados
-            </p>
-
-            <p style="
-                font-weight:300;
-                font-size:14px;
-                margin:0;
-                color:#4B5563;
-            ">
-                {{ obra.acabados }}
-            </p>
-
-        </div>
-
-        {% endif %}
-
-        {% if obra.observaciones %}
+        
 
         <div>
 
@@ -798,14 +1214,14 @@ Tipo de desarrollo:
                 margin:0;
                 color:#4B5563;
             ">
-                {{ obra.observaciones }}
+                LA INVERSIÓN PUBLICADA REPRESENTA EL MONTO TOTAL DE LA OBRA. LAS FECHAS PUBLICADAS CORRESPONDEN A LOS TRABAJOS DE CIMENTACIÓN. LA SUPERFICIE TOTAL A CONSTRUIR CONTIENE LA ZONA HABITABLE MAS UN 20% DE SUPERFICIE CUBIERTA, QUE CORRESPONDE A ÁREAS COMUNES, DE SERVICIOS Y CIRCULACIÓN. PARA MAYOR INFORMACIÓN RELACIONADO AL PROYECTO DIRIGIRSE CON EL ING. JAVIER ELOZONDO, ENCARGADO DE LA OBRA Y DE COMPRAS.
             </p>
 
         </div>
 
-        {% endif %}
+        
 
-        {% if obra.descripcionextra %}
+        
 
         <div>
 
@@ -824,12 +1240,12 @@ Tipo de desarrollo:
                 margin:0;
                 color:#4B5563;
             ">
-                {{ obra.descripcionextra }}
+                CONTARÁ CON: PISCINA, LUDOTECA, SALÓN GOURMET, ÁREAS VERDES, ZONA DE RELAJACIÓN, SALA DE PROYECCIÓN, ESPACIOS PARA MASCOTAS, SALA DE TRABAJO, SALÓN DE JUEGOS, CANCHA DE PADEL.
             </p>
 
         </div>
 
-        {% endif %}
+        
 
     </div>
 

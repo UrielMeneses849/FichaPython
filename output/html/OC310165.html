@@ -10,9 +10,9 @@
 
 <style>
 
-@page {
+    @page {
     size: A4;
-    margin: 2mm;
+    margin: 8px 8px;
 }
 
 body{
@@ -20,6 +20,7 @@ body{
     background:white;
     padding:4px 8px 8px 8px;
     color:#374151;
+    zoom:0.88;
 }
 *{
     -webkit-print-color-adjust: exact !important;
@@ -44,7 +45,7 @@ body{
 
 .container{
     width:100%;
-    max-width:1400px;
+    max-width:1120px;
     margin:0 auto;
 }
 
@@ -193,7 +194,7 @@ h1,h2,h3,h4,h5{
 
 
 <img
-src="{{ logo_path }}"
+src="file:///Users/urielmeneses/Desktop/MicroservicioPython/assets/logo_bimsa.png"
 alt="Logo BIMSA"
 style="height:58px;object-fit:contain;display:block;margin:16px 0;"
 >
@@ -206,7 +207,7 @@ Ficha Técnica del Proyecto
 </h2>
 
 <div class="date">
-Fecha de publicación: {{ obra.proy_fechacierre }}
+Fecha de publicación: 2023-12-04
 </div>
 
 <div style="
@@ -217,11 +218,11 @@ align-items:center;
 ">
 
 <div class="badge-orange">
-{{ obra.proy_tipoproyectodescripcion }}
+Proyecto contratado
 </div>
 
 <div class="badge-gray">
-{{ obra.proy_clave }}
+OC310165
 </div>
 
 </div>
@@ -253,7 +254,7 @@ Información General
 </h3>
 
 <div class="orange-pill">
-Etapa: {{ obra.proy_etapa }}
+Etapa: Inicio
 </div>
 
 </div>
@@ -271,14 +272,14 @@ Nombre del proyecto:
 </div>
 
 <div class="info-value">
-{{ obra.proy_nombre }}
+Cimentación Para Residencia De Lujo En 2 Niveles 
 </div>
 
 </div>
 
 <div style="
 display:grid;
-grid-template-columns: minmax(310px, 1.1fr) minmax(140px, 0.7fr) minmax(140px, 0.7fr);
+grid-template-columns:minmax(340px,1.6fr) minmax(140px,0.5fr) minmax(140px,0.5fr);
 gap:10px;
 margin-bottom:10px;
 align-items:stretch;
@@ -291,7 +292,7 @@ align-items:stretch;
 Fecha Inicio Probable
 </div>
 <div class="info-value">
-{{ obra.proy_fecha_inicio }}
+2023-12-01
 </div>
 </div>
 
@@ -300,11 +301,9 @@ Fecha Inicio Probable
 Fecha Termino Probable
 </div>
 <div class="info-value">
-{% if obra.proy_fecha_fin and obra.proy_fecha_fin|trim != "" %}
-    {{ obra.proy_fecha_fin }}
-{% else %}
-    Desconocido
-{% endif %}
+
+    2024-02-20
+
 </div>
 </div>
 
@@ -325,7 +324,7 @@ white-space:nowrap;
 overflow:hidden;
 text-overflow:ellipsis;
 ">
-{{ obra.genero }}
+Vivienda
 </div>
 
 </div>
@@ -345,7 +344,7 @@ white-space:nowrap;
 overflow:hidden;
 text-overflow:ellipsis;
 ">
-{{ obra.subgenero }}
+Lujo
 </div>
 
 </div>
@@ -363,18 +362,18 @@ Ubicación del proyecto
 <div style="display:flex;gap:22px;font-size:14px;font-weight:300;color:#374151;">
 <div>
 <span style="font-weight:300;">Estado:</span>
-{{ obra.esta_descripcion }}
+Coahuila
 </div>
 <div>
 <span style="font-weight:300;">Municipio:</span>
-{{ obra.muni_descripcion }}
+Torreon
 </div>
 </div>
 
 </div>
 
 <div class="info-value">
-{{ obra.proy_localizacion }}
+Av. Laguna Norte (Cercano Al Parque Central Y Del Reloj), Torreón, Coahuila
 </div>
 
 </div>
@@ -383,7 +382,7 @@ Ubicación del proyecto
 
 <!-- RIGHT -->
 
-<div class="card" style="padding:14px;display:flex;flex-direction:column;justify-content:flex-start; gap:8px">
+<div class="card" style="padding:14px;display:flex;flex-direction:column;justify-content:flex-start;">
 
 <div style="
 display:flex;
@@ -423,7 +422,7 @@ Inversión:
 </div>
 
 <div style="
-font-size:16px;
+font-size:14px;
 font-weight:400;
 color:#374151;
 text-align:right;
@@ -436,7 +435,7 @@ align-items:center;
 justify-content:flex-end;
 height:28px;
 ">
-MXN ${{ '{:,.0f}'.format(obra.proy_inversion|float) }}
+MXN $9,402,000
 </div>
 
 </div>
@@ -445,35 +444,31 @@ MXN ${{ '{:,.0f}'.format(obra.proy_inversion|float) }}
     flex-direction: column;
     font-size: 16px;
     color: #374151;
-    height: 80%;
-    justify-content: center;
-    gap: 24px;
-}">
+    height: 100%;
+    justify-content: space-around;">
 
 <div class="info-value">
 Superficie construida:
 
-{% if obra.superficie|float == 0 %}
-    Desconocido
-{% else %}
-    {{ '{:,.0f}'.format(obra.superficie|float) }} m²
-{% endif %}
+
+    1,500 m²
+
 
 </div>
 
 <div class="info-value">
 Sector:
-{{ obra.sector }}
+Privado
 </div>
 
 <div class="info-value">
 Tipo de obra:
-{{ obra.tipo_obra }}
+Vivienda Unifamiliar De Lujo
 </div>
 
 <div class="info-value">
 Tipo de desarrollo:
-{{ obra.desa_descripcion }}
+Obra Nueva
 </div>
 
 </div>
@@ -496,20 +491,20 @@ Tipo de desarrollo:
     Compañías
 </h3>
 
-{% set totalCias = obra.cias_normalizadas|length %}
 
-{% for cia in obra.cias_normalizadas %}
+
+
 
 <div style="
     padding:12px;
-    margin-bottom:{% if totalCias > 1 %}16px{% else %}0px{% endif %};
+    margin-bottom:0px;
 ">
 
 <!-- HEADER -->
 
 <div style="
     display:grid;
-    grid-template-columns:minmax(360px, 0.2fr) 2fr;
+    grid-template-columns:minmax(420px, 1.3fr) 2fr;
     align-items:center;
     margin-bottom:24px;
     column-gap:34px;
@@ -531,12 +526,12 @@ Tipo de desarrollo:
             line-height:1.5;
             word-break:break-word;
         ">
-            {{ cia.nombre }}
+            Consorcio De Cimentaciones Y Construcciones / As Construcciones Y Cimentaciones / As Cimentaciones
         </div>
 
         <div style="
             flex:1;
-            min-width:30px;
+            min-width:80px;
             height:1px;
             background:#E5E7EB;
             margin-top:4px;
@@ -561,7 +556,7 @@ Tipo de desarrollo:
 
 <div style="
     display:grid;
-    grid-template-columns:minmax(350px, 0.8fr) 2.2fr;
+    grid-template-columns:minmax(420px, 1.3fr) 2fr;
     gap:34px;
     align-items:start;
 ">
@@ -570,58 +565,34 @@ Tipo de desarrollo:
 
     <div style="
         display:grid;
-        grid-template-columns:80px 1fr;
+        grid-template-columns:100px 1fr;
         gap:6px 10px;
         font-size:13px;
     ">
 
-        <span style="font-weight:300;font-size:14px; width: fit-content;">
+        <span style="font-weight:300;font-size:14px;">
             Rol
         </span>
 
-        <span style="font-weight:300;font-size:14px; width: fit-content;">
-            {{ cia.rol }}
+        <span style="font-weight:300;font-size:14px;">
+            Subcontratista De Cimentacion
         </span>
 
-        <span style="font-weight:300;font-size:14px; width: fit-content;">
+        <span style="font-weight:300;font-size:14px;">
             Dirección
         </span>
 
-        <span style="font-weight:300;font-size:14px; width: fit-content;">
-            {{ cia.direccion }}
+        <span style="font-weight:300;font-size:14px;">
+            La Opinion # 555
         </span>
 
-        <span style="font-weight:300;font-size:14px; width: fit-content;">
+        <span style="font-weight:300;font-size:14px;">
             Teléfono
         </span>
 
-<span style="font-weight:300;font-size:14px;">
-    {{ cia.telefono1 }}
-</span>
-
-{% if cia.telefono2 and cia.telefono2|trim != "" %}
-
-<span style="font-weight:300;font-size:14px; width: fit-content;">
-    Teléfono 2
-</span>
-
-<span style="font-weight:300;font-size:14px;">
-    {{ cia.telefono2 }}
-</span>
-
-{% endif %}
-
-{% if cia.telefono3 and cia.telefono3|trim != "" %}
-
-<span style="font-weight:300;font-size:14px; width: fit-content;">
-    Teléfono 3
-</span>
-
-<span style="font-weight:300;font-size:14px;">
-    {{ cia.telefono3 }}
-</span>
-
-{% endif %}
+        <span style="font-weight:300;font-size:14px;">
+            7189 393
+        </span>
 
     </div>
 
@@ -629,12 +600,12 @@ Tipo de desarrollo:
 
     <div style="
         display:grid;
-        grid-template-columns:repeat(2,minmax(200px,1fr));
+        grid-template-columns:repeat(2,minmax(260px,1fr));
         gap:16px;
         align-items:start;
     ">
 
-        {% for contacto in cia.contactos %}
+        
 
         <div style="
             background:#F9FAFB;
@@ -644,6 +615,7 @@ Tipo de desarrollo:
             flex-direction:column;
             gap:8px;
             justify-content:center;
+            width: max-content;
             padding: 8px 16px;
         ">
 
@@ -651,26 +623,63 @@ Tipo de desarrollo:
                 font-weight:400;
                 font-size:14px;
             ">
-                {{ contacto.puesto }}
+                Encargado De Costos
             </div>
 
             <div style="
                 font-weight:300;
                 font-size:14px;
             ">
-                {{ contacto.nombre }}
+                Luis Alfredo  Gonzalez Jaquez
             </div>
 
             <div style="
                 color:#6B7280;
                 font-size:12px;
             ">
-                {{ contacto.email }}
+                cimenta.tecnico@gmail.com
             </div>
 
         </div>
 
-        {% endfor %}
+        
+
+        <div style="
+            background:#F9FAFB;
+            border-radius:12px;
+            padding:10px;
+            display:flex;
+            flex-direction:column;
+            gap:8px;
+            justify-content:center;
+            width: max-content;
+            padding: 8px 16px;
+        ">
+
+            <div style="
+                font-weight:400;
+                font-size:14px;
+            ">
+                Gerente De Proyectos
+            </div>
+
+            <div style="
+                font-weight:300;
+                font-size:14px;
+            ">
+                Javier Elizondo
+            </div>
+
+            <div style="
+                color:#6B7280;
+                font-size:12px;
+            ">
+                cimenta.tecnico@gmail.com
+            </div>
+
+        </div>
+
+        
 
     </div>
 
@@ -678,7 +687,7 @@ Tipo de desarrollo:
 
 </div>
 
-{% endfor %}
+
 
 </div>
 <!-- INFORMACION ADICIONAL -->
@@ -727,7 +736,7 @@ Tipo de desarrollo:
         line-height:1.7;
     ">
 
-        {% if obra.descripcion %}
+        
 
         <div>
 
@@ -746,40 +755,16 @@ Tipo de desarrollo:
                 margin:0;
                 color:#4B5563;
             ">
-                {{ obra.descripcion }}
+                Etapa: inicio, tipo de trabajo: obra nueva, no.de niveles: 2, tamaño: superficie cubierta construida: 1500 m², categoria: lujo, superficie promedio: 1500 m².
             </p>
 
         </div>
 
-        {% endif %}
+        
 
-        {% if obra.acabados %}
+        
 
-        <div>
-
-            <p style="
-                font-weight:300;
-                font-size:16px;
-                margin:0 0 8px 0;
-                color:#374151;
-            ">
-                Acabados
-            </p>
-
-            <p style="
-                font-weight:300;
-                font-size:14px;
-                margin:0;
-                color:#4B5563;
-            ">
-                {{ obra.acabados }}
-            </p>
-
-        </div>
-
-        {% endif %}
-
-        {% if obra.observaciones %}
+        
 
         <div>
 
@@ -798,14 +783,14 @@ Tipo de desarrollo:
                 margin:0;
                 color:#4B5563;
             ">
-                {{ obra.observaciones }}
+                Para mayor información relacionada al proyecto, dirigirse con el ing. javier elizondo, enmcargado de la obra.
             </p>
 
         </div>
 
-        {% endif %}
+        
 
-        {% if obra.descripcionextra %}
+        
 
         <div>
 
@@ -824,12 +809,12 @@ Tipo de desarrollo:
                 margin:0;
                 color:#4B5563;
             ">
-                {{ obra.descripcionextra }}
+                Solo realizarán trabajos de cimentación
             </p>
 
         </div>
 
-        {% endif %}
+        
 
     </div>
 
