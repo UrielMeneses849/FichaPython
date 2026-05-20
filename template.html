@@ -10,9 +10,9 @@
 
 <style>
 
-    @page {
+@page {
     size: A4;
-    margin: 8px 8px;
+    margin: 2mm;
 }
 
 body{
@@ -20,7 +20,6 @@ body{
     background:white;
     padding:4px 8px 8px 8px;
     color:#374151;
-    zoom:0.88;
 }
 *{
     -webkit-print-color-adjust: exact !important;
@@ -45,8 +44,8 @@ body{
 
 .container{
     width:100%;
-    max-width:none;
-    margin:0;
+    max-width:1400px;
+    margin:0 auto;
 }
 
 .header-right{
@@ -254,7 +253,7 @@ Información General
 </h3>
 
 <div class="orange-pill">
-Etapa: {{ obra.proy_etapa|title  }}
+Etapa: {{ obra.proy_etapa }}
 </div>
 
 </div>
@@ -272,14 +271,14 @@ Nombre del proyecto:
 </div>
 
 <div class="info-value">
-{{ obra.proy_nombre|title }}
+{{ obra.proy_nombre }}
 </div>
 
 </div>
 
 <div style="
 display:grid;
-grid-template-columns:minmax(340px,1.6fr) minmax(140px,0.5fr) minmax(140px,0.5fr);
+grid-template-columns: minmax(310px, 1.1fr) minmax(140px, 0.7fr) minmax(140px, 0.7fr);
 gap:10px;
 margin-bottom:10px;
 align-items:stretch;
@@ -326,7 +325,7 @@ white-space:nowrap;
 overflow:hidden;
 text-overflow:ellipsis;
 ">
-{{ obra.genero|title }}
+{{ obra.genero }}
 </div>
 
 </div>
@@ -346,7 +345,7 @@ white-space:nowrap;
 overflow:hidden;
 text-overflow:ellipsis;
 ">
-{{ obra.subgenero|title }}
+{{ obra.subgenero }}
 </div>
 
 </div>
@@ -364,18 +363,18 @@ Ubicación del proyecto
 <div style="display:flex;gap:22px;font-size:14px;font-weight:300;color:#374151;">
 <div>
 <span style="font-weight:300;">Estado:</span>
-{{ obra.esta_descripcion|title }}
+{{ obra.esta_descripcion }}
 </div>
 <div>
 <span style="font-weight:300;">Municipio:</span>
-{{ obra.muni_descripcion|title }}
+{{ obra.muni_descripcion }}
 </div>
 </div>
 
 </div>
 
 <div class="info-value">
-{{ obra.proy_localizacion|title }}
+{{ obra.proy_localizacion }}
 </div>
 
 </div>
@@ -384,7 +383,7 @@ Ubicación del proyecto
 
 <!-- RIGHT -->
 
-<div class="card" style="padding:14px;display:flex;flex-direction:column;justify-content:flex-start;">
+<div class="card" style="padding:14px;display:flex;flex-direction:column;justify-content:flex-start; gap:8px">
 
 <div style="
 display:flex;
@@ -424,7 +423,7 @@ Inversión:
 </div>
 
 <div style="
-font-size:14px;
+font-size:16px;
 font-weight:400;
 color:#374151;
 text-align:right;
@@ -446,8 +445,10 @@ MXN ${{ '{:,.0f}'.format(obra.proy_inversion|float) }}
     flex-direction: column;
     font-size: 16px;
     color: #374151;
-    height: 100%;
-    justify-content: space-around;">
+    height: 80%;
+    justify-content: center;
+    gap: 24px;
+}">
 
 <div class="info-value">
 Superficie construida:
@@ -462,17 +463,17 @@ Superficie construida:
 
 <div class="info-value">
 Sector:
-{{ obra.sector|title }}
+{{ obra.sector }}
 </div>
 
 <div class="info-value">
 Tipo de obra:
-{{ obra.tipo_obra|title }}
+{{ obra.tipo_obra }}
 </div>
 
 <div class="info-value">
 Tipo de desarrollo:
-{{ obra.desa_descripcion|title }}
+{{ obra.desa_descripcion }}
 </div>
 
 </div>
@@ -508,7 +509,7 @@ Tipo de desarrollo:
 
 <div style="
     display:grid;
-    grid-template-columns:minmax(420px, 1.3fr) 2fr;
+    grid-template-columns:minmax(360px, 0.2fr) 2fr;
     align-items:center;
     margin-bottom:24px;
     column-gap:34px;
@@ -530,12 +531,12 @@ Tipo de desarrollo:
             line-height:1.5;
             word-break:break-word;
         ">
-            {{ cia.nombre|title }}
+            {{ cia.nombre }}
         </div>
 
         <div style="
             flex:1;
-            min-width:80px;
+            min-width:30px;
             height:1px;
             background:#E5E7EB;
             margin-top:4px;
@@ -560,7 +561,7 @@ Tipo de desarrollo:
 
 <div style="
     display:grid;
-    grid-template-columns:minmax(420px, 1.3fr) 2fr;
+    grid-template-columns:minmax(350px, 0.8fr) 2.2fr;
     gap:34px;
     align-items:start;
 ">
@@ -569,34 +570,58 @@ Tipo de desarrollo:
 
     <div style="
         display:grid;
-        grid-template-columns:100px 1fr;
+        grid-template-columns:80px 1fr;
         gap:6px 10px;
         font-size:13px;
     ">
 
-        <span style="font-weight:300;font-size:14px;">
+        <span style="font-weight:300;font-size:14px; width: fit-content;">
             Rol
         </span>
 
-        <span style="font-weight:300;font-size:14px;">
-            {{ cia.rol|title }}
+        <span style="font-weight:300;font-size:14px; width: fit-content;">
+            {{ cia.rol }}
         </span>
 
-        <span style="font-weight:300;font-size:14px;">
+        <span style="font-weight:300;font-size:14px; width: fit-content;">
             Dirección
         </span>
 
-        <span style="font-weight:300;font-size:14px;">
-            {{ cia.direccion|title }}
+        <span style="font-weight:300;font-size:14px; width: fit-content;">
+            {{ cia.direccion }}
         </span>
 
-        <span style="font-weight:300;font-size:14px;">
+        <span style="font-weight:300;font-size:14px; width: fit-content;">
             Teléfono
         </span>
 
-        <span style="font-weight:300;font-size:14px;">
-            {{ cia.telefono }}
-        </span>
+<span style="font-weight:300;font-size:14px;">
+    {{ cia.telefono1 }}
+</span>
+
+{% if cia.telefono2 and cia.telefono2|trim != "" %}
+
+<span style="font-weight:300;font-size:14px; width: fit-content;">
+    Teléfono 2
+</span>
+
+<span style="font-weight:300;font-size:14px;">
+    {{ cia.telefono2 }}
+</span>
+
+{% endif %}
+
+{% if cia.telefono3 and cia.telefono3|trim != "" %}
+
+<span style="font-weight:300;font-size:14px; width: fit-content;">
+    Teléfono 3
+</span>
+
+<span style="font-weight:300;font-size:14px;">
+    {{ cia.telefono3 }}
+</span>
+
+{% endif %}
 
     </div>
 
@@ -604,7 +629,7 @@ Tipo de desarrollo:
 
     <div style="
         display:grid;
-        grid-template-columns:repeat(2,minmax(260px,1fr));
+        grid-template-columns:repeat(2,minmax(200px,1fr));
         gap:16px;
         align-items:start;
     ">
@@ -619,20 +644,21 @@ Tipo de desarrollo:
             flex-direction:column;
             gap:8px;
             justify-content:center;
+            padding: 8px 16px;
         ">
 
             <div style="
                 font-weight:400;
                 font-size:14px;
             ">
-                {{ contacto.puesto|title }}
+                {{ contacto.puesto }}
             </div>
 
             <div style="
                 font-weight:300;
                 font-size:14px;
             ">
-                {{ contacto.nombre|title }}
+                {{ contacto.nombre }}
             </div>
 
             <div style="
@@ -720,7 +746,7 @@ Tipo de desarrollo:
                 margin:0;
                 color:#4B5563;
             ">
-                {{ obra.descripcion|capitalize }}
+                {{ obra.descripcion }}
             </p>
 
         </div>
@@ -746,7 +772,7 @@ Tipo de desarrollo:
                 margin:0;
                 color:#4B5563;
             ">
-                {{ obra.acabados|capitalize }}
+                {{ obra.acabados }}
             </p>
 
         </div>
@@ -772,7 +798,7 @@ Tipo de desarrollo:
                 margin:0;
                 color:#4B5563;
             ">
-                {{ obra.observaciones|capitalize }}
+                {{ obra.observaciones }}
             </p>
 
         </div>
@@ -798,7 +824,7 @@ Tipo de desarrollo:
                 margin:0;
                 color:#4B5563;
             ">
-                {{ obra.descripcionextra|capitalize }}
+                {{ obra.descripcionextra }}
             </p>
 
         </div>

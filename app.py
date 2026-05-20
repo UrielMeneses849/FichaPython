@@ -3,7 +3,6 @@ import asyncio
 
 from storage import pdf_existe
 from render import generar_pdf
-from merger import merge_pdfs
 
 # =========================
 # VALIDAR INPUT
@@ -13,14 +12,24 @@ if len(sys.argv) < 2:
     print("Debes enviar una o varias claves")
     sys.exit()
 
+# =========================
+# SOPORTAR:
+# OC1,OC2,OC3
+# OC1 OC2 OC3
+# =========================
+
 claves = []
 
 for arg in sys.argv[1:]:
-    claves.extend([
-        clave.strip()
-        for clave in arg.split(",")
-        if clave.strip()
-    ])
+
+    partes = arg.split(",")
+
+    for parte in partes:
+
+        clave = parte.strip()
+
+        if clave:
+            claves.append(clave)
 
 # =========================
 # PROCESAR
@@ -31,8 +40,6 @@ async def main():
     pdfs_finales = []
 
     for clave in claves:
-
-        clave = clave.strip()
 
         print(f"\nProcesando: {clave}")
 
@@ -50,26 +57,16 @@ async def main():
 
             pdf_generado = await generar_pdf(clave)
 
-            pdfs_finales.append(pdf_generado)
+            if pdf_generado:
+                pdfs_finales.append(pdf_generado)
 
     # =========================
-    # SI SOLO ES 1 PDF
+    # RESPUESTA FINAL
     # =========================
 
-    if len(pdfs_finales) == 1:
+    print("\nPDFS GENERADOS:")
 
-        print("\nPDF FINAL:")
-        print(pdfs_finales[0])
-
-        return
-
-    # =========================
-    # MERGE
-    # =========================
-
-    merged = merge_pdfs(pdfs_finales)
-
-    print("\nPDF MERGEADO:")
-    print(merged)
+    for pdf in pdfs_finales:
+        print(pdf)
 
 asyncio.run(main())

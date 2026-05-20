@@ -53,6 +53,15 @@ async def generar_pdf(clave):
     obra_xml = obtener_obra(clave)
 
     # =========================
+    # VALIDAR RESPUESTA WS
+    # =========================
+
+    if obra_xml is None:
+        print(f"No se encontró información para la clave: {clave}")
+
+        return None
+
+    # =========================
     # COMPAÑIAS
     # =========================
 
@@ -84,7 +93,11 @@ async def generar_pdf(clave):
             "nombre": cia.findtext("comp_razon_social") or "",
             "rol": cia.findtext("roco_descripcion") or "",
             "direccion": cia.findtext("sucu_calle") or "",
-            "telefono": cia.findtext("sucu_telefono1") or "",
+
+            "telefono1": cia.findtext("sucu_telefono1") or "",
+            "telefono2": cia.findtext("sucu_telefono2") or "",
+            "telefono3": cia.findtext("sucu_telefono3") or "",
+
             "contactos": contactos
         })
 
@@ -185,7 +198,7 @@ async def generar_pdf(clave):
         logo_path=logo_path
     )
 
-    html_path = f"output/html/ficha_{clave}.html"
+    html_path = f"output/html/{clave}.html"
 
     with open(html_path, "w", encoding="utf-8") as f:
         f.write(html)
@@ -194,7 +207,7 @@ async def generar_pdf(clave):
     # PLAYWRIGHT
     # =========================
 
-    pdf_path = f"output/pdf/ficha_{clave}.pdf"
+    pdf_path = f"output/pdf/{clave}.pdf"
 
     os.environ["PLAYWRIGHT_BROWSERS_PATH"] = get_playwright_path()
 
@@ -208,6 +221,11 @@ async def generar_pdf(clave):
 
         html_absoluto = Path(html_path).resolve()
 
+        await page.set_viewport_size({
+            "width": 1400,
+            "height": 1200
+        })
+
         await page.goto(
             html_absoluto.as_uri()
         )
@@ -215,15 +233,17 @@ async def generar_pdf(clave):
         await page.pdf(
             path=pdf_path,
             format="A4",
+            landscape=True,
+            prefer_css_page_size=True,
             print_background=True,
+            scale=0.7,
             margin={
-                "top": "20px",
-                "right": "20px",
-                "bottom": "20px",
-                "left": "20px"
+                "top": "10mm",
+                "right": "5mm",
+                "bottom": "10mm",
+                "left": "5mm"
             }
         )
-
         await browser.close()
 
     print(f"PDF generado: {pdf_path}")
