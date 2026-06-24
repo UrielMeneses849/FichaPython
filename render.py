@@ -170,6 +170,15 @@ async def generar_pdf(clave):
         "superficie":
             extraer_texto(obra_xml, "proy_superficie_construida"),
 
+        "caracteristicas":
+            extraer_texto(obra_xml, "caracteristicas"),
+
+        "actualizacion":
+            extraer_texto(obra_xml, "actualizacion"),
+
+        "concurso":
+            extraer_texto(obra_xml, "concurso"),
+
         "cias_normalizadas":
             cias_normalizadas
     }

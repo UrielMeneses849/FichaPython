@@ -831,6 +831,85 @@ Tipo de desarrollo:
 
         {% endif %}
 
+
+	{% if obra.caracteristicas %}
+
+        <div>
+
+            <p style="
+                font-weight:300;
+                font-size:16px;
+                margin:0 0 8px 0;
+                color:#374151;
+            ">
+                Características
+            </p>
+
+            <p style="
+                font-weight:300;
+                font-size:14px;
+                margin:0;
+                color:#4B5563;
+            ">
+                {{ obra.caracteristicas }}
+            </p>
+
+        </div>
+
+        {% endif %}
+
+	{% if obra.actualizacion %}
+
+        <div>
+
+            <p style="
+                font-weight:300;
+                font-size:16px;
+                margin:0 0 8px 0;
+                color:#374151;
+            ">
+                Actualización
+            </p>
+
+            <p style="
+                font-weight:300;
+                font-size:14px;
+                margin:0;
+                color:#4B5563;
+            ">
+                {{ obra.actualizacion }}
+            </p>
+
+        </div>
+
+        {% endif %}
+
+	{% if obra.concurso %}
+
+        <div>
+
+            <p style="
+                font-weight:300;
+                font-size:16px;
+                margin:0 0 8px 0;
+                color:#374151;
+            ">
+                Concurso
+            </p>
+
+            <p style="
+                font-weight:300;
+                font-size:14px;
+                margin:0;
+                color:#4B5563;
+            ">
+                {{ obra.concurso }}
+            </p>
+
+        </div>
+
+        {% endif %}
+
     </div>
 
 </div>
