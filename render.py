@@ -1,260 +1,138 @@
+"""Ejecuta el mismo exportador vectorial de la plataforma dentro de Chromium."""
+import base64
 import asyncio
+import hashlib
+import io
+import json
 import os
 import sys
-
 from pathlib import Path
+from urllib.parse import unquote, urlparse
+
+import requests
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 from playwright.async_api import async_playwright
-from jinja2 import Environment, FileSystemLoader
+from PyPDF2 import PdfReader
 
-from parser import obtener_obra
+from parser import obtener_obra, validar_clave
 
-# =========================
-# PLAYWRIGHT PATH
-# =========================
+ASSET_ROOT = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
+WEB_ROOT = ASSET_ROOT / "assets" / "web"
+
 
 def get_playwright_path():
+    return os.environ.get("PLAYWRIGHT_BROWSERS_PATH", str(ASSET_ROOT / "ms-playwright"))
 
-    # =========================
-    # EXE (PYINSTALLER)
-    # =========================
 
-    if getattr(sys, 'frozen', False):
+def firma_render():
+    digest = hashlib.sha256()
+    digest.update(b"mensajero-web-vector-v1")
+    for path in [ASSET_ROOT / "template.html", ASSET_ROOT / "render.py", ASSET_ROOT / "parser.py",
+                 *sorted(WEB_ROOT.glob("*"))]:
+        if path.is_file():
+            digest.update(path.name.encode())
+            digest.update(path.read_bytes())
+    return digest.hexdigest()
 
-        base_path = sys._MEIPASS
 
-    else:
+def leer_recurso(location, base_dir):
+    if location.startswith("data:"):
+        header, value = location.split(",", 1)
+        return base64.b64decode(value, validate=True) if ";base64" in header else unquote(value).encode("latin1")
+    parsed = urlparse(location)
+    if parsed.scheme in ("http", "https"):
+        with requests.get(location, timeout=(15, 60), stream=True) as response:
+            response.raise_for_status()
+            content = bytearray()
+            for chunk in response.iter_content(65536):
+                content.extend(chunk)
+                if len(content) > 30 * 1024 * 1024:
+                    raise ValueError("La imagen de la ficha excede 30 MB.")
+            return bytes(content)
+    if parsed.scheme == "file":
+        return Path(unquote(parsed.path)).read_bytes()
+    if parsed.scheme and len(parsed.scheme) != 1:
+        raise ValueError(f"Protocolo de recurso no soportado: {parsed.scheme}")
+    path = Path(location)
+    return (path if path.is_absolute() else base_dir / path).read_bytes()
 
-        base_path = os.getcwd()
 
-    return os.path.join(
-        base_path,
-        "ms-playwright"
-    )
-
-# =========================
-# HELPERS
-# =========================
-
-def extraer_texto(node, tag):
-
-    value = node.findtext(tag)
-
-    if value:
-        return value
-
-    return ""
-
-# =========================
-# RENDER
-# =========================
-
-async def generar_pdf(clave):
-
-    obra_xml = obtener_obra(clave)
-
-    # =========================
-    # VALIDAR RESPUESTA WS
-    # =========================
-
-    if obra_xml is None:
-        print(f"No se encontró información para la clave: {clave}")
-
+def imagen_satelital(obra, base_dir):
+    location = str(obra.get("imagen_explorer") or "").strip()
+    if not location:
         return None
+    try:
+        content = leer_recurso(location, base_dir)
+        if content.startswith((b"\x89PNG\r\n\x1a\n", b"\xff\xd8")):
+            return content
+        raise ValueError("La imagen satelital debe ser PNG o JPEG.")
+    except (requests.RequestException, OSError, ValueError) as error:
+        if not obra.get("urlFicha"):
+            raise ValueError(f"No fue posible incluir la imagen de {obra['proy_clave']}: {error}") from error
+        reader = PdfReader(io.BytesIO(leer_recurso(str(obra["urlFicha"]), base_dir)))
+        images = []
+        for page in reader.pages:
+            resources = page["/Resources"].get_object()
+            xobjects = resources.get("/XObject")
+            if not xobjects:
+                continue
+            for ref in xobjects.get_object().values():
+                image = ref.get_object()
+                if (image.get("/Subtype") == "/Image" and image.get("/Filter") == "/DCTDecode"
+                        and image.get("/Width", 0) >= 300 and image.get("/Height", 0) >= 200):
+                    images.append((image["/Width"] * image["/Height"], image.get_data()))
+        if not images:
+            raise ValueError("El PDF del servicio no contiene una imagen satelital válida.") from error
+        return max(images, key=lambda item: item[0])[1]
 
-    # =========================
-    # COMPAÑIAS
-    # =========================
 
-    cias_normalizadas = []
-
-    cias = obra_xml.findall(".//CIAS/CIA")
-
-    for cia in cias:
-
-        contactos = []
-
-        contactos_xml = cia.findall(".//CONTACTOS/CONTACTO")
-
-        for contacto in contactos_xml:
-
-            nombre_completo = (
-                (contacto.findtext("cont_nombre") or "") + " " +
-                (contacto.findtext("cont_paterno") or "") + " " +
-                (contacto.findtext("cont_materno") or "")
-            )
-
-            contactos.append({
-                "puesto": contacto.findtext("cont_puesto") or "",
-                "nombre": nombre_completo.strip(),
-                "email": contacto.findtext("cont_email") or ""
-            })
-
-        cias_normalizadas.append({
-            "nombre": cia.findtext("comp_razon_social") or "",
-            "rol": cia.findtext("roco_descripcion") or "",
-            "direccion": cia.findtext("sucu_calle") or "",
-
-            "telefono1": cia.findtext("sucu_telefono1") or "",
-            "telefono2": cia.findtext("sucu_telefono2") or "",
-            "telefono3": cia.findtext("sucu_telefono3") or "",
-
-            "contactos": contactos
-        })
-
-    # =========================
-    # OBJETO
-    # =========================
-
-    obra = {
-
-        "proy_clave":
-            extraer_texto(obra_xml, "proy_clave"),
-
-        "proy_nombre":
-            extraer_texto(obra_xml, "proy_descripcioncorta"),
-
-        "proy_fechacierre":
-            extraer_texto(obra_xml, "proy_fechacierre"),
-
-        "proy_tipoproyectodescripcion":
-            extraer_texto(obra_xml, "proy_tipoproyectodescripcion"),
-
-        "proy_fecha_inicio":
-            extraer_texto(obra_xml, "proy_fechainicio"),
-
-        "proy_fecha_fin":
-            extraer_texto(obra_xml, "proy_fechatermino"),
-
-        "proy_localizacion":
-            extraer_texto(obra_xml, "proy_localizacion"),
-
-        "proy_inversion":
-            extraer_texto(obra_xml, "proy_inversion"),
-
-        "proy_etapa":
-            extraer_texto(obra_xml, "proy_etapa"),
-
-        "esta_descripcion":
-            extraer_texto(obra_xml, "esta_descripcion"),
-
-        "muni_descripcion":
-            extraer_texto(obra_xml, "muni_descripcion"),
-
-        "sector":
-            extraer_texto(obra_xml, "proy_sectordescripcion"),
-
-        "tipo_obra":
-            extraer_texto(obra_xml, "tiob_descripcion"),
-
-        "subgenero":
-            extraer_texto(obra_xml, "suge_descripcion"),
-
-        "genero":
-            extraer_texto(obra_xml, "gene_descripcion"),
-
-        "desa_descripcion":
-            extraer_texto(obra_xml, "desa_descripcion"),
-
-        "descripcion":
-            extraer_texto(obra_xml, "proy_descripcionlarga"),
-
-        "acabados":
-            extraer_texto(obra_xml, "acabados"),
-
-        "observaciones":
-            extraer_texto(obra_xml, "observaciones"),
-
-        "descripcionextra":
-            extraer_texto(obra_xml, "descripcionextra"),
-
-        "superficie":
-            extraer_texto(obra_xml, "proy_superficie_construida"),
-
-        "caracteristicas":
-            extraer_texto(obra_xml, "caracteristicas"),
-
-        "actualizacion":
-            extraer_texto(obra_xml, "actualizacion"),
-
-        "concurso":
-            extraer_texto(obra_xml, "concurso"),
-
-        "cias_normalizadas":
-            cias_normalizadas
-    }
-
-    # =========================
-    # CREAR FOLDERS
-    # =========================
-
-    Path("output/html").mkdir(parents=True, exist_ok=True)
-    Path("output/pdf").mkdir(parents=True, exist_ok=True)
-
-    # =========================
-    # JINJA
-    # =========================
-
-    env = Environment(
-        loader=FileSystemLoader(".")
+def crear_html(obra, base_dir, generated_at=None):
+    resources = {name: base64.b64encode((WEB_ROOT / file).read_bytes()).decode() for name, file in {
+        "regularBytes": "poppins-latin-400-normal.woff",
+        "mediumBytes": "poppins-latin-500-normal.woff",
+        "semiBoldBytes": "poppins-latin-600-normal.woff",
+    }.items()}
+    resources["logoPng"] = "data:image/png;base64," + base64.b64encode((WEB_ROOT / "logo-construleads.png").read_bytes()).decode()
+    satellite = imagen_satelital(obra, base_dir)
+    if satellite:
+        resources["satelliteBytes"] = base64.b64encode(satellite).decode()
+    payload = json.dumps({"obra": obra, "resources": resources, "generatedAt": generated_at}, ensure_ascii=True)
+    payload = payload.replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
+    env = Environment(loader=FileSystemLoader(ASSET_ROOT), autoescape=select_autoescape(["html"]))
+    return env.get_template("template.html").render(
+        clave=obra["proy_clave"], payload=payload,
+        pdf_lib=(WEB_ROOT / "pdf-lib.min.js").read_text(encoding="utf-8"),
+        fontkit=(WEB_ROOT / "fontkit.umd.min.js").read_text(encoding="utf-8"),
+        engine=(WEB_ROOT / "engine.js").read_text(encoding="utf-8"),
     )
 
-    template = env.get_template("template.html")
 
-    logo_path = Path("assets/logo_bimsa.png").resolve().as_uri()
-
-    html = template.render(
-        obra=obra,
-        logo_path=logo_path
-    )
-
-    html_path = f"output/html/{clave}.html"
-
-    with open(html_path, "w", encoding="utf-8") as f:
-        f.write(html)
-
-    # =========================
-    # PLAYWRIGHT
-    # =========================
-
-    pdf_path = f"output/pdf/{clave}.pdf"
-
+async def generar_pdf(clave, *, obra=None, output_dir="output", base_dir=None, generated_at=None):
+    clave = validar_clave(clave)
+    obra = obra if obra is not None else obtener_obra(clave)
+    if obra["proy_clave"] != clave:
+        raise ValueError(f"La ficha recibida no corresponde a {clave}.")
+    output = Path(output_dir).resolve()
+    html_path = output / "html" / f"{clave}.html"
+    pdf_path = output / "pdf" / f"{clave}.pdf"
+    html_path.parent.mkdir(parents=True, exist_ok=True)
+    pdf_path.parent.mkdir(parents=True, exist_ok=True)
+    html = crear_html(obra, Path(base_dir or Path.cwd()), generated_at)
+    html_path.write_text(html, encoding="utf-8")
     os.environ["PLAYWRIGHT_BROWSERS_PATH"] = get_playwright_path()
-
-    async with async_playwright() as p:
-
-        browser = await p.chromium.launch(
-            headless=True
-        )
-
-        page = await browser.new_page()
-
-        html_absoluto = Path(html_path).resolve()
-
-        await page.set_viewport_size({
-            "width": 1400,
-            "height": 1200
-        })
-
-        await page.goto(
-            html_absoluto.as_uri()
-        )
-
-        await page.pdf(
-            path=pdf_path,
-            format="A4",
-            landscape=True,
-            prefer_css_page_size=True,
-            print_background=True,
-            scale=0.7,
-            margin={
-                "top": "10mm",
-                "right": "5mm",
-                "bottom": "10mm",
-                "left": "5mm"
-            }
-        )
-        await browser.close()
-
+    async with async_playwright() as playwright:
+        browser = await playwright.chromium.launch(headless=True)
+        try:
+            page = await browser.new_page(timezone_id="America/Mexico_City")
+            await page.goto(html_path.as_uri(), wait_until="load")
+            encoded = await asyncio.wait_for(page.evaluate("() => window.fichaBase64()"), timeout=120)
+            content = base64.b64decode(encoded, validate=True)
+            if not content.startswith(b"%PDF-"):
+                raise ValueError("El exportador no devolvió un PDF válido.")
+            temporary = pdf_path.with_suffix(".pdf.tmp")
+            temporary.write_bytes(content)
+            temporary.replace(pdf_path)
+        finally:
+            await browser.close()
     print(f"PDF generado: {pdf_path}")
-
-    return pdf_path
+    return str(pdf_path)

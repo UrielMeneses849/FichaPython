@@ -1,0 +1,55 @@
+{
+  "fichas": [
+    {
+      "Clave_Proyecto": "OC-EJEMPLO",
+      "Origen": "construleads",
+      "Proyecto": "Proyecto de demostración para Mensajero",
+      "Tipo_Proyecto": "Proyecto Contratado",
+      "Fecha_Publicacion": "2026-10-14",
+      "Fecha_Inicio": "2026-10-26",
+      "Fecha_Terminacion": "2027-03-27",
+      "Etapa": "Pre-inicio",
+      "Genero": "Infraestructura",
+      "Subgenero": "Infraestructura",
+      "Estado_Proyecto": "Tlaxcala",
+      "Municipio_Proyecto": "Nanacamilpa de Mariano Arista",
+      "Localizacion1": "Domicilio de demostración",
+      "Inversion": 146796257,
+      "PorcentajeAvance": 0,
+      "Sector": "Gobierno",
+      "Tipo_Obra": "Carreteras",
+      "Tipo_Desarrollo": "Rehabilitación",
+      "cias_normalizadas": [
+        {
+          "nombre": "Empresa de demostración",
+          "rol": "Contratista General",
+          "direccion": "Domicilio de demostración",
+          "telefono1": "55 0000 0000",
+          "contactos": [{"puesto": "Responsable del proyecto", "nombre": "Contacto de prueba", "email": "qa@example.com"}]
+        }
+      ]
+    },
+    {
+      "Clave_Proyecto": "EX-EJEMPLO",
+      "Origen": "explorer",
+      "Proyecto": "Proyecto Explorer de demostración",
+      "Tipo_Proyecto": "Proyecto Contratado",
+      "Fecha_Publicacion": "2026-05-20",
+      "Fecha_Inicio": "2026-02-09",
+      "Fecha_Terminacion": "2027-08-03",
+      "Etapa": "Obra Negociada",
+      "Genero": "Edificación",
+      "Subgenero": "Comercial",
+      "Estado_Proyecto": "Guerrero",
+      "Municipio_Proyecto": "Acapulco",
+      "Latitud": "16.931700",
+      "Longitud": "-99.821200",
+      "Inversion": 210304000,
+      "Sup_Construida": 10600,
+      "PorcentajeAvance": 19,
+      "Sector": "Privado",
+      "Tipo_Obra": "Plazas Comercio, Tiendas, Autoservicio",
+      "Tipo_Desarrollo": "Obra Nueva"
+    }
+  ]
+}

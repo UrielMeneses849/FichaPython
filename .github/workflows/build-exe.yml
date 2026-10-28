@@ -13,6 +13,9 @@ jobs:
   build:
 
     runs-on: windows-latest
+    timeout-minutes: 30
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}\ms-playwright
 
     steps:
 
@@ -48,7 +51,10 @@ jobs:
 
       - name: Install Playwright Browsers
         run: |
-          playwright install chromium
+          playwright install chromium --only-shell
+
+      - name: Verify XML and JSON contracts
+        run: python -m unittest discover -s tests -v
 
       # =========================
       # BUILD RENDERER EXE
@@ -59,10 +65,11 @@ jobs:
         run: |
           pyinstaller --onefile ^
           --name ficha-renderer ^
+          --collect-all playwright ^
           --add-data "template.html;." ^
           --add-data "style.css;." ^
           --add-data "assets;assets" ^
-          --add-data "%USERPROFILE%\AppData\Local\ms-playwright;ms-playwright" ^
+          --add-data "ms-playwright;ms-playwright" ^
           app.py
 
       # =========================
@@ -76,6 +83,9 @@ jobs:
           --name pdf-merger ^
           pdf_merger.py
 
+      - name: Test packaged Windows executables
+        run: python scripts/smoke_windows_exe.py
+
       # =========================
       # UPLOAD ARTIFACT
       # =========================
@@ -87,3 +97,4 @@ jobs:
           path: |
             dist/ficha-renderer.exe
             dist/pdf-merger.exe
+          if-no-files-found: error

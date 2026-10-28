@@ -1,0 +1,18 @@
+{
+  "source": "construleads-web/src/utils/fichaPdf.js",
+  "files": {
+    "fichaMetadata.js": "5d50d3b2b10bc8ef1ccae2fef1801297419b481463271c45d34a40685afe24b2",
+    "projectType.js": "7eb26d0cff23a1a70e5d29f11785cacee603304b1d24ef9b46e112ffa022ccea",
+    "fichaPdf.js": "0861a5b5571599375e6c24c877f3d71c57f6adf03b029d5c213dcd67451b4c75",
+    "pdf-lib.min.js": "0f9a5cad07941f0826586c94e089d89b918c46e5c17cf2d5a3c6f666e3bc694f",
+    "fontkit.umd.min.js": "d8df561b9fba98e24f2e5130e40948809281bbbc55a20c412359f1a0a5eb35a6",
+    "pdf-lib.LICENSE": "f2c9fc00fdb66eb99ac156ba52d734af66d8d309f65753ae809ad34ee2883bcb",
+    "fontkit.NOTICE.md": "7315fcc54511f5ffc906969c39333f93cd47f5217ab014fe45acff14bd5ec4c0",
+    "poppins.LICENSE": "5c4a92c8f8ce0ab211f4c72889d82383c9644546115d9ba39a4f2d5b8f37014b",
+    "poppins-latin-400-normal.woff": "6076b418803564833cde2aece96c51b29927ab0a98dfbe727774d1a6c6e6c445",
+    "poppins-latin-500-normal.woff": "abdc91ec7e4438b1e1d7f808d388614789d69037059b74a9d6166d00eb9b8b04",
+    "poppins-latin-600-normal.woff": "55fffef7b100460605349fa5215eb7dcd6e558e195d08e43eddc64c4b27d43b3",
+    "logo-construleads.png": "e92de024ab8e020fc0b34ed2d6e867084fe8633f0ac140af1e5ff4d48a0cc886",
+    "engine.js": "0f864ca635db848ca5a3baec836410b61f473c12f3539f27b33dc3a680aaa2dd"
+  }
+}

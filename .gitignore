@@ -1,6 +1,7 @@
 # Python
 __pycache__/
 *.pyc
+.venv/
 
 # PyCharm
 .idea/
@@ -10,6 +11,10 @@ __pycache__/
 
 # Output
 *.pdf
+/output/html/
+/output/pdf/
+/output/qa/
+/tmp/
 
 # Playwright local browsers
 ms-playwright/
