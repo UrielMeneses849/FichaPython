@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NewDataSet>
+  <OBRAS>
+    <proy_clave>OC-EJEMPLO</proy_clave>
+    <proy_descripcioncorta>Proyecto de demostración para Mensajero</proy_descripcioncorta>
+    <proy_tipoproyectodescripcion>Proyecto Contratado</proy_tipoproyectodescripcion>
+    <proy_fechacierre>2026-10-14</proy_fechacierre>
+    <proy_fechainicio>2026-10-26</proy_fechainicio>
+    <proy_fechatermino>2027-03-27</proy_fechatermino>
+    <proy_etapa>Pre-inicio</proy_etapa>
+    <gene_descripcion>Infraestructura</gene_descripcion>
+    <suge_descripcion>Infraestructura</suge_descripcion>
+    <esta_descripcion>Tlaxcala</esta_descripcion>
+    <muni_descripcion>Nanacamilpa de Mariano Arista</muni_descripcion>
+    <proy_localizacion>Domicilio de demostración</proy_localizacion>
+    <proy_inversion>146796257</proy_inversion>
+    <PorcentajeAvance>0</PorcentajeAvance>
+    <proy_sectordescripcion>Gobierno</proy_sectordescripcion>
+    <tiob_descripcion>Carreteras</tiob_descripcion>
+    <desa_descripcion>Rehabilitación</desa_descripcion>
+    <CIAS><CIA>
+      <comp_razon_social>Empresa de demostración</comp_razon_social>
+      <roco_descripcion>Contratista General</roco_descripcion>
+      <sucu_calle>Domicilio de demostración</sucu_calle>
+      <sucu_telefono1>55 0000 0000</sucu_telefono1>
+      <CONTACTOS><CONTACTO>
+        <cont_puesto>Responsable del proyecto</cont_puesto>
+        <cont_nombre>Contacto de prueba</cont_nombre>
+        <cont_email>qa@example.com</cont_email>
+      </CONTACTO></CONTACTOS>
+    </CIA></CIAS>
+  </OBRAS>
+</NewDataSet>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NewDataSet><datos>
+  <Clave_Proyecto>EX-EJEMPLO</Clave_Proyecto>
+  <Origen>GEP_IMAGES_POINTS</Origen>
+  <Proyecto>Proyecto Explorer de demostración</Proyecto>
+  <Tipo_Proyecto>Proyecto Contratado</Tipo_Proyecto>
+  <Fecha_Publicacion>2026-05-20</Fecha_Publicacion>
+  <Fecha_Inicio>2026-02-09</Fecha_Inicio>
+  <Fecha_Terminacion>2027-08-03</Fecha_Terminacion>
+  <Etapa>Obra Negociada</Etapa>
+  <Genero>Edificación</Genero>
+  <Subgenero>Comercial</Subgenero>
+  <Estado_Proyecto>Guerrero</Estado_Proyecto>
+  <Municipio_Proyecto>Acapulco</Municipio_Proyecto>
+  <Latitud>16.931700</Latitud>
+  <Longitud>-99.821200</Longitud>
+  <Inversion>210304000</Inversion>
+  <Sup_Construida>10600</Sup_Construida>
+  <PorcentajeAvance>19</PorcentajeAvance>
+  <Sector>Privado</Sector>
+  <Tipo_Obra>Plazas Comercio, Tiendas, Autoservicio</Tipo_Obra>
+  <Tipo_Desarrollo>Obra Nueva</Tipo_Desarrollo>
+  <impo_image_url>__IMAGE_URL__</impo_image_url>
+  <fecha_imagen>2026-09-05</fecha_imagen>
+</datos></NewDataSet>

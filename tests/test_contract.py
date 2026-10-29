@@ -1,21 +1,53 @@
 import json
 import tempfile
 import unittest
+from unittest.mock import Mock, patch
 from pathlib import Path
 
-from parser import cargar_fichas, leer_json, leer_xml, normalizar_obra, validar_clave
+from parser import cargar_fichas, leer_json, leer_xml, normalizar_obra, obtener_obra, validar_clave
 from render import crear_html, imagen_satelital
 from storage import guardar_metadata, pdf_existe
 
 
 class MensajeroContract(unittest.TestCase):
-    def test_both_sources_and_zero_progress_survive_json(self):
-        obras = cargar_fichas(Path(__file__).parents[1] / "examples/fichas-mixtas.json")
+    def test_both_sources_and_zero_progress_survive_xml(self):
+        fixtures = Path(__file__).parent / "fixtures"
+        obras = [leer_xml((fixtures / name).read_bytes())[0] for name in ("ws_construleads.xml", "ws_explorer.xml")]
         self.assertEqual([o["origen"] for o in obras], ["construleads", "explorer"])
-        self.assertEqual(obras[0]["porcentaje_avance"], 0)
+        self.assertEqual(obras[0]["porcentaje_avance"], "0")
         self.assertEqual(obras[1]["latitud"], "16.931700")
-        self.assertEqual(obras[1]["fecha_imagen"], "")
+        self.assertEqual(obras[1]["fecha_imagen"], "2026-09-05")
         self.assertEqual(obras[0]["cias_normalizadas"][0]["contactos"][0]["nombre"], "Contacto de prueba")
+
+    def test_keys_consume_the_platform_xml_without_session_or_input_file(self):
+        fixtures = Path(__file__).parent / "fixtures"
+        for key, endpoint, fixture in [
+            ("OC-EJEMPLO", "ws_cl_sobrasficha", "ws_construleads.xml"),
+            ("EX-EJEMPLO", "ws_cl_sobrasficha_explorer", "ws_explorer.xml"),
+        ]:
+            response = Mock(content=(fixtures / fixture).read_bytes())
+            with patch.dict("os.environ", {"BIMSA_TOKEN": "test-token", "BIMSA_WS_BASE_URL": "https://service.example/ws_cl.asmx"}), \
+                 patch("parser.requests.post", return_value=response) as post:
+                obra = obtener_obra(key)
+            self.assertEqual(obra["proy_clave"], key)
+            self.assertEqual(post.call_args.args[0], f"https://service.example/ws_cl.asmx/{endpoint}")
+            self.assertEqual(post.call_args.kwargs["data"], {
+                "sClave_obras": key, "sTk": "test-token", "sId_usuario": "", "sId_session": ""})
+            response.raise_for_status.assert_called_once()
+
+    def test_ws_cannot_return_a_different_key(self):
+        xml = (Path(__file__).parent / "fixtures/ws_explorer.xml").read_bytes()
+        with patch("parser.requests.post", return_value=Mock(content=xml)):
+            with self.assertRaisesRegex(ValueError, "no devolvió la clave"):
+                obtener_obra("EX-OTRA")
+
+    def test_command_only_requires_project_keys(self):
+        from app import argumentos
+        for command in (["app.py", "OC335798,EX001065"], ["app.py", "OC335798", "EX001065"]):
+            with patch("sys.argv", command):
+                args = argumentos()
+                self.assertFalse(hasattr(args, "datos"))
+                self.assertEqual(",".join(args.claves).split(","), ["OC335798", "EX001065"])
 
     def test_historical_xml_multiple_companies_and_contacts(self):
         xml = '''<root><OBRAS><proy_clave>OC123</proy_clave><CIAS>

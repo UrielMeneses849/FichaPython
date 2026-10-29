@@ -1,5 +1,11 @@
 # Verificación de fichas de Mensajero
 
+Actualización del flujo de producción: el renderer recibe sólo claves y
+consulta el XML directamente en `ws_cl_sobrasficha` o
+`ws_cl_sobrasficha_explorer`. No requiere los archivos de entrada usados en
+las pruebas de maquetación descritas a continuación. Los comandos antiguos
+con `--datos` son evidencia histórica de QA, no instrucciones vigentes.
+
 final result: passed
 
 ## Referencias y alcance

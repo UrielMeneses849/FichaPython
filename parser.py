@@ -1,4 +1,4 @@
-"""Contratos de ficha de la plataforma y entrada de Mensajero (XML/JSON)."""
+"""Consulta XML de las fichas Construleads y Explorer en el WS de la plataforma."""
 import json
 import os
 import re
@@ -80,6 +80,8 @@ def normalizar_obra(record, origen="auto"):
     obra["proy_clave"] = validar_clave(obra["proy_clave"])
     raw_origin = origen if origen != "auto" else primero(record, "origen", "Origen", "sourceOrigin")
     raw_origin = str(raw_origin).strip().lower()
+    # El XML Explorer actual identifica su tabla de origen con este nombre.
+    raw_origin = {"gep_images_points": "explorer"}.get(raw_origin, raw_origin)
     if raw_origin and raw_origin not in ("explorer", "explora", "construleads"):
         raise ValueError(f"Origen no reconocido: {raw_origin}")
     obra["origen"] = ("explorer" if raw_origin in ("explorer", "explora") else "construleads") if raw_origin else (
@@ -143,17 +145,22 @@ def cargar_fichas(path, origen="auto"):
 
 
 def obtener_obra(clave, origen="auto"):
-    """Compatibilidad con la consulta histórica por clave, sin sesión web."""
+    """Consulta por clave: el WS actual admite el token de aplicación sin sesión."""
     clave = validar_clave(clave)
-    if origen == "explorer" or (origen == "auto" and clave.upper().startswith("EX")):
-        raise ValueError("Para Explorer, Mensajero debe proporcionar XML/JSON con --datos archivo.")
+    fuente = ("explorer" if clave.upper().startswith("EX") else "construleads") if origen == "auto" else origen
+    if fuente not in ("construleads", "explorer"):
+        raise ValueError(f"Origen no reconocido: {fuente}")
+    endpoint = "ws_cl_sobrasficha_explorer" if fuente == "explorer" else "ws_cl_sobrasficha"
+    base_url = os.environ.get("BIMSA_WS_BASE_URL", "https://www.construleads.com/ws_new_cl/ws_cl.asmx").rstrip("/")
     response = requests.post(
-        "https://construleads.com/ws_cl/ws_cl.asmx/ws_CL_sobrasfull_pdf",
-        data={"sClave_obras": clave, "sTk": os.environ.get("BIMSA_TOKEN", "74611436e643e2c093c4713d44a6c81b1b5e1ba71050731bf45347775b8cc90e")},
+        f"{base_url}/{endpoint}",
+        data={"sClave_obras": clave,
+              "sTk": os.environ.get("BIMSA_TOKEN", "AS79s834925MPSUoXTKSDF56945v4FDG954ASD6Gt5G5HS965498d6548f546g65AD"),
+              "sId_usuario": "", "sId_session": ""},
         timeout=(15, 60),
     )
     response.raise_for_status()
-    obras = leer_xml(response.content, origen)
+    obras = leer_xml(response.content, fuente)
     obra = next((obra for obra in obras if obra["proy_clave"] == clave), None)
     if obra is None:
         raise ValueError(f"El servicio no devolvió la clave solicitada: {clave}")
